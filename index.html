@@ -3,158 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chaim Perlowitz | Official Site</title>
+    <title>Chaim Perlowitz | Desktop Portal</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
 
-    <header>
-        <nav>
-            <div class="logo">CHAIM PERLOWITZ</div>
-            <ul>
-                <li><a href="#home">Home</a></li>
-                <li><a href="#vlogs">Vlogs</a></li>
-                <li><a href="#blogs">Blogs</a></li>
-                <li><a href="#polls">Polls</a></li>
-                <li><a href="#stores">Stores</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <section id="home" class="hero">
-        <h1>Chaim Perlowitz</h1>
-        <p>Professional Entertainment & Digital Content</p>
-        <a href="#vlogs" class="btn">Watch Latest Vlogs</a>
-    </section>
-
-    <div class="ad-container">
-        <p class="ad-label">ADVERTISEMENT</p>
-        <div class="ad-placeholder">Feature Your Brand Here</div>
+    <div id="splash">
+        <div class="splash-content">
+            <div class="splash-logo">CP</div>
+            <div class="loading-container">
+                <div class="progress-bar"></div>
+            </div>
+            <p>CHAIM PERLOWITZ DESKTOP</p>
+            <small><i class="fas fa-lock"></i> End-to-end encrypted</small>
+        </div>
     </div>
 
-    <section id="vlogs" class="content-section">
-        <h2>Latest Vlogs</h2>
-        <div class="grid">
-            <div class="card">
-                <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
-                <div class="card-content">
-                    <h3>Behind the Scenes: Episode 1</h3>
-                    <p>A deep dive into the creative process.</p>
+    <div id="login-screen" class="hidden">
+        <div class="login-header-bg"></div>
+        <div class="login-card">
+            <div class="login-text">
+                <h1>To use Chaim's Portal on your computer:</h1>
+                <ol>
+                    <li>Open this site to access exclusive content.</li>
+                    <li>Enter your <strong>Access Key</strong> or Name below.</li>
+                    <li>Click <strong>'ENTER PORTAL'</strong> to start chatting.</li>
+                </ol>
+                <div class="login-form">
+                    <input type="text" id="username-input" placeholder="Your Name">
+                    <button onclick="enterSite()" class="login-btn">ENTER PORTAL</button>
                 </div>
             </div>
-            <div class="card">
-                <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
-                <div class="card-content">
-                    <h3>On Location: NYC</h3>
-                    <p>Exploring the energy of the city.</p>
+            <div class="login-qr">
+                <div class="qr-box">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=ChaimPerlowitz" alt="QR Code">
+                </div>
+                <p>Scan for mobile access</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="app" class="hidden">
+        <div class="sidebar">
+            <header class="side-header">
+                <div class="profile-pic">CP</div>
+                <div class="header-icons">
+                    <i class="fas fa-circle-notch"></i>
+                    <i class="fas fa-comment-alt"></i>
+                    <i class="fas fa-ellipsis-v"></i>
+                </div>
+            </header>
+
+            <div class="search-bar">
+                <div class="search-inner">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search or start new chat">
+                </div>
+            </div>
+
+            <div class="chat-list">
+                <div class="chat-item active" onclick="switchChat('ai')">
+                    <div class="chat-avatar bot-color"><i class="fas fa-robot"></i></div>
+                    <div class="chat-meta">
+                        <div class="chat-top"><span>Business AI Bot</span> <small>12:45 PM</small></div>
+                        <p>Ask me about ads & business...</p>
+                    </div>
+                </div>
+                <div class="chat-item" onclick="switchChat('vlogs')">
+                    <div class="chat-avatar vlogs-color"><i class="fas fa-video"></i></div>
+                    <div class="chat-meta">
+                        <div class="chat-top"><span>Chaim's Vlogs</span> <small>Yesterday</small></div>
+                        <p>Video: NYC Behind the Scenes</p>
+                    </div>
+                </div>
+                <div class="chat-item" onclick="switchChat('blogs')">
+                    <div class="chat-avatar blogs-color"><i class="fas fa-newspaper"></i></div>
+                    <div class="chat-meta">
+                        <div class="chat-top"><span>The Blog Feed</span> <small>Tuesday</small></div>
+                        <p>New Post: The Future of Media</p>
+                    </div>
+                </div>
+                <div class="chat-item" onclick="switchChat('polls')">
+                    <div class="chat-avatar polls-color"><i class="fas fa-poll-h"></i></div>
+                    <div class="chat-meta">
+                        <div class="chat-top"><span>Live Polls</span> <small>10:00 AM</small></div>
+                        <p>Vote on the next topic!</p>
+                    </div>
+                </div>
+                <div class="chat-item" onclick="switchChat('stores')">
+                    <div class="chat-avatar stores-color"><i class="fas fa-map-marker-alt"></i></div>
+                    <div class="chat-meta">
+                        <div class="chat-top"><span>Store Finder</span> <small>Online</small></div>
+                        <p>Find a location near you</p>
+                    </div>
                 </div>
             </div>
         </div>
-    </section>
 
-    <section id="blogs" class="content-section">
-        <h2>Featured Blogs</h2>
-        <div class="grid">
-            <div class="card">
-                <div class="card-content">
-                    <h3>The Art of Storytelling</h3>
-                    <p>Why narrative matters in modern media...</p>
-                    <a href="#" class="btn-small">Read More</a>
+        <div class="chat-window">
+            <header class="chat-header">
+                <div class="current-chat-info">
+                    <div id="current-avatar" class="chat-avatar-small bot-color"><i class="fas fa-robot"></i></div>
+                    <div class="current-text">
+                        <h3 id="active-chat-title">Business AI Bot</h3>
+                        <small>online</small>
+                    </div>
                 </div>
-            </div>
-            <div class="card">
-                <div class="card-content">
-                    <h3>Digital Trends 2026</h3>
-                    <p>What to expect in the coming year...</p>
-                    <a href="#" class="btn-small">Read More</a>
+                <div class="header-icons">
+                    <i class="fas fa-search"></i>
+                    <i class="fas fa-ellipsis-v"></i>
                 </div>
-            </div>
+            </header>
+
+            <div id="message-area" class="message-area">
+                </div>
+
+            <footer class="chat-footer">
+                <i class="far fa-smile"></i>
+                <i class="fas fa-paperclip"></i>
+                <input type="text" id="chat-input" placeholder="Type a message">
+                <button id="send-btn"><i class="fas fa-paper-plane"></i></button>
+            </footer>
         </div>
-    </section>
-
-    <section id="polls" class="content-section poll-bg">
-        <h2>Create a Poll</h2>
-        <div class="poll-container">
-            <div class="poll-form">
-                <label>Poll Title</label>
-                <input type="text" id="pollTitle" placeholder="Poll test">
-
-                <label>Poll Image (Optional)</label>
-                <div class="upload-box">
-                    <input type="text" id="pollImageUrl" placeholder="Image URL">
-                    <button class="btn-secondary"><i class="fas fa-upload"></i> Upload</button>
-                </div>
-
-                <label>Poll Type</label>
-                <select id="pollType">
-                    <option value="multiple">Multiple Choice</option>
-                    <option value="rating">Rating</option>
-                </select>
-
-                <div class="options-header">
-                    <label>Options</label>
-                    <button type="button" class="btn-text" onclick="addOption()"><i class="fas fa-plus"></i> Add Option</button>
-                </div>
-                <div id="optionsList">
-                    <input type="text" class="poll-option" placeholder="One">
-                    <input type="text" class="poll-option" placeholder="Two">
-                </div>
-
-                <div class="toggle-container">
-                    <label class="switch">
-                        <input type="checkbox" id="multipleSelections">
-                        <span class="slider round"></span>
-                    </label>
-                    <span>Allow multiple selections</span>
-                </div>
-
-                <label>Expiration Date (Optional)</label>
-                <input type="date" id="expiryDate">
-
-                <label>Status</label>
-                <select id="pollStatus">
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
-                </select>
-                
-                <button class="btn" style="width: 100%; margin-top: 20px;">Create Poll</button>
-            </div>
-        </div>
-    </section>
-
-    <section id="stores" class="content-section">
-        <h2>Store Finder</h2>
-        <div class="search-box">
-            <input type="text" id="storeSearch" placeholder="Search by city or zip..." onkeyup="searchStores()">
-        </div>
-        <ul id="storeList">
-            <li class="store-item"><strong>New York Flagship</strong> - 123 Broadway, NY <a href="#">(Map)</a></li>
-            <li class="store-item"><strong>Jersey Hub</strong> - 456 Garden State Pkwy, NJ <a href="#">(Map)</a></li>
-            <li class="store-item"><strong>London Branch</strong> - 789 Piccadilly, UK <a href="#">(Map)</a></li>
-        </ul>
-    </section>
-
-    <section id="contact" class="content-section">
-        <h2>Get in Touch</h2>
-        <div class="contact-container">
-            <form action="https://formspree.io/f/YOUR_ID_HERE" method="POST">
-                <input type="text" name="name" placeholder="Your Name" required>
-                <input type="email" name="email" placeholder="Your Email" required>
-                <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
-                <button type="submit" class="btn">Send Message</button>
-            </form>
-        </div>
-    </section>
-
-    <a href="https://wa.me/1234567890" class="whatsapp-float" target="_blank">
-        <i class="fab fa-whatsapp"></i>
-    </a>
-
-    <footer>
-        <p>&copy; 2026 Chaim Perlowitz. All rights reserved.</p>
-    </footer>
+    </div>
 
     <script src="script.js"></script>
 </body>
