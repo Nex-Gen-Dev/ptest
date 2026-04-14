@@ -1,133 +1,112 @@
-// Ensure these are only declared ONCE at the very top
 const SUPABASE_URL = 'https://tijpwcarnjlrelcycyym.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_f8zO8IQeA8WTsd9fj-3k-w_HCY7JBte';
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// 1. SPLASH TRANSITION
+let currentTab = 'ai';
+let currentUser = "Guest";
+
+// 1. App Startup
 document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
-        const splash = document.getElementById('splash');
-        const login = document.getElementById('login-screen');
-        if (splash) splash.style.display = 'none';
-        if (login) {
-            login.classList.remove('hidden');
-            login.style.display = 'flex';
-        }
-    }, 2500);
+        document.getElementById('splash').classList.add('hidden');
+        document.getElementById('login-screen').classList.remove('hidden');
+        document.getElementById('login-screen').style.display = 'flex';
+    }, 2000);
 });
 
-// 2. LOGIN LOGIC
-let currentUser = "Guest";
 function enterSite() {
-    const nameInput = document.getElementById('username-input');
-    if (nameInput && nameInput.value.trim() !== "") {
-        currentUser = nameInput.value;
-        document.getElementById('login-screen').style.display = 'none';
-        const app = document.getElementById('app');
-        app.classList.remove('hidden');
-        app.style.display = 'flex';
-        switchChat('ai');
-    } else {
-        alert("Please enter your name.");
-    }
+    const name = document.getElementById('username-input').value;
+    if(name.trim() === "") return alert("Please enter your name.");
+    currentUser = name;
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('app').classList.remove('hidden');
+    switchTab('ai', document.querySelector('.nav-links li'));
 }
 
-async function switchChat(key) {
-    const msgArea = document.getElementById('message-area');
-    document.getElementById('active-chat-title').innerText = siteData[key].title;
+// 2. Tab & Content Logic
+async function switchTab(key, el) {
+    currentTab = key;
+    document.querySelectorAll('.nav-links li').forEach(li => li.classList.remove('active'));
+    if(el) el.classList.add('active');
     
-    msgArea.innerHTML = '<div class="loading-spinner"></div>'; // Add a nice CSS spinner later
+    document.getElementById('active-title').innerText = el ? el.innerText : key.toUpperCase();
+    document.getElementById('chat-footer').style.display = (key === 'ai') ? 'flex' : 'none';
 
-    // 1. FETCH DATA
-    const { data: items, error } = await _supabase.from(key === 'polls' ? 'polls' : 'content').select('*');
+    refreshContent();
+}
 
-    msgArea.innerHTML = '';
+async function refreshContent() {
+    const area = document.getElementById('display-area');
+    area.innerHTML = '<div style="text-align:center; padding:50px; color:gray;"><i class="fas fa-sync fa-spin"></i> Updating Portal...</div>';
 
-    if (items && items.length > 0) {
-        items.forEach(item => {
-            const div = document.createElement('div');
-            
-            if (key === 'polls') {
-                // --- BEAUTIFUL POLL CARD ---
-                div.className = "poll-card-modern";
-                const opts = item.options.split(','); // Split "Yes,No,Maybe" into an array
-                
-                div.innerHTML = `
-                    ${item.image_url ? `<img src="${item.image_url}" class="poll-img">` : ''}
-                    <div class="poll-content">
-                        <h4>${item.question}</h4>
-                        <div class="poll-options-grid">
-                            ${opts.map(opt => `<button class="poll-vote-btn" onclick="castVote(this)">${opt.trim()}</button>`).join('')}
-                        </div>
-                    </div>
-                `;
-            } else {
-                // --- REGULAR CHAT MESSAGE ---
-                div.className = "msg in";
-                div.innerHTML = `<strong>${item.title}</strong><br>${item.body}`;
-            }
-            msgArea.appendChild(div);
-        });
+    if (currentTab === 'polls') {
+        const { data } = await _supabase.from('polls').select('*').order('created_at', {ascending: false});
+        area.innerHTML = '';
+        data?.forEach(poll => area.appendChild(renderPoll(poll)));
     } else {
-        msgArea.innerHTML = `<p class='empty-state'>No ${key} available yet.</p>`;
+        const { data } = await _supabase.from('content').select('*').eq('category', currentTab).order('created_at', {ascending: false});
+        area.innerHTML = '';
+        data?.forEach(item => {
+            const div = document.createElement('div');
+            div.className = "msg in";
+            div.innerHTML = `<strong>${item.title}</strong><br>${item.body}`;
+            area.appendChild(div);
+        });
     }
 }
 
-// THE CELEBRATION FUNCTION
-function castVote(btn) {
-    // 1. Visual Feedback
-    btn.style.background = "#00a884";
-    btn.style.color = "white";
-    btn.innerHTML = "✓ Voted";
+// 3. 2026 Poll Rendering
+function renderPoll(poll) {
+    const card = document.createElement('div');
+    card.className = "poll-card";
+    const options = poll.options.split(',');
+    
+    card.innerHTML = `
+        ${poll.image_url ? `<img src="${poll.image_url}" class="poll-img">` : ''}
+        <div class="poll-body">
+            <h3>${poll.question}</h3>
+            <div class="poll-options">
+                ${options.map(opt => `<button class="poll-btn" onclick="triggerVote(this)">${opt.trim()}</button>`).join('')}
+            </div>
+        </div>
+    `;
+    return card;
+}
 
-    // 2. CONFETTI BURST (The 2026 Touch)
+function triggerVote(btn) {
     confetti({
         particleCount: 150,
         spread: 70,
-        origin: { y: 0.6 },
+        origin: { y: 0.8 },
         colors: ['#00a884', '#ffffff', '#25d366']
     });
 
-    // 3. Disable other buttons in the same card
-    const parent = btn.parentElement;
-    const buttons = parent.querySelectorAll('button');
-    buttons.forEach(b => b.disabled = true);
+    btn.innerHTML = "✓ Voted Successfully";
+    btn.style.background = "#e7fce3";
+    btn.style.borderColor = "#00a884";
+    const parent = btn.closest('.poll-options');
+    parent.querySelectorAll('button').forEach(b => b.disabled = true);
 }
-// 4. AI SEND BUTTON (THE FIX)
-document.getElementById('send-btn').addEventListener('click', async () => {
+
+// 4. AI Chat Logic
+document.getElementById('send-btn').onclick = async () => {
     const input = document.getElementById('chat-input');
-    const msgArea = document.getElementById('message-area');
-    const activeTitle = document.getElementById('active-chat-title').innerText;
+    const msg = input.value.trim();
+    if(!msg) return;
+
+    const div = document.createElement('div');
+    div.className = "msg out";
+    div.innerText = msg;
+    document.getElementById('display-area').appendChild(div);
+    input.value = "";
+
+    await _supabase.from('inquiries').insert([{ sender: currentUser, message: msg }]);
     
-    if(input.value.trim() !== "" && activeTitle === "Business AI Bot") {
-        const userMsg = input.value;
-        
-        // Show user message in UI
-        const uDiv = document.createElement('div');
-        uDiv.className = "msg out";
-        uDiv.innerText = userMsg;
-        msgArea.appendChild(uDiv);
-
-        // CLEAR INPUT
-        input.value = "";
-
-        // SEND TO SUPABASE
-        const { error } = await _supabase
-            .from('inquiries')
-            .insert([{ sender: currentUser, message: userMsg }]);
-
-        if (error) {
-            console.error("DATABASE ERROR:", error.message);
-        } else {
-            // Show bot response only if save worked
-            setTimeout(() => {
-                const bDiv = document.createElement('div');
-                bDiv.className = "msg in";
-                bDiv.innerHTML = `<strong>Bot:</strong> Got it, ${currentUser}. Chaim's team will review this!`;
-                msgArea.appendChild(bDiv);
-                msgArea.scrollTop = msgArea.scrollHeight;
-            }, 800);
-        }
-        msgArea.scrollTop = msgArea.scrollHeight;
-    }
-});
+    setTimeout(() => {
+        const botDiv = document.createElement('div');
+        botDiv.className = "msg in";
+        botDiv.innerText = "Chaim's team has received your message. We'll get back to you!";
+        document.getElementById('display-area').appendChild(botDiv);
+        document.getElementById('display-area').scrollTop = document.getElementById('display-area').scrollHeight;
+    }, 1000);
+};

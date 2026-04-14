@@ -2,106 +2,79 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Chaim's Dashboard | Admin Command Center</title>
+    <title>Chaim's Command Center | Admin</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --primary: #00a884; --bg: #f0f2f5; --sidebar: #111b21; --text-light: #e9edef; }
+        :root { --primary: #00a884; --bg: #f0f2f5; --sidebar: #111b21; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-        body { background: var(--bg); display: flex; height: 100vh; }
+        body { background: var(--bg); display: flex; height: 100vh; overflow: hidden; }
 
-        /* Sidebar Look */
-        .sidebar { width: 260px; background: var(--sidebar); color: var(--text-light); display: flex; flex-direction: column; }
-        .sidebar-header { padding: 30px; font-size: 1.5rem; font-weight: bold; color: var(--primary); border-bottom: 1px solid #222; }
-        .nav-item { padding: 15px 30px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 15px; color: #aebac1; }
+        .sidebar { width: 260px; background: var(--sidebar); color: white; display: flex; flex-direction: column; }
+        .sidebar-header { padding: 30px; font-size: 1.2rem; font-weight: bold; color: var(--primary); border-bottom: 1px solid #222; }
+        .nav-item { padding: 15px 30px; cursor: pointer; display: flex; align-items: center; gap: 15px; color: #aebac1; transition: 0.3s; }
         .nav-item:hover, .nav-item.active { background: #2a3942; color: white; border-left: 4px solid var(--primary); }
 
-        /* Main Content */
         .main { flex: 1; overflow-y: auto; padding: 40px; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 25px; }
         
-        /* Form Styling */
         input, select, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; outline: none; }
-        .btn { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; }
-        .btn-refresh { background: #54656f; width: auto; margin-bottom: 10px; }
+        .btn { background: var(--primary); color: white; border: none; padding: 14px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; }
+        .refresh-btn { background: #54656f; width: auto; margin-bottom: 15px; padding: 10px 20px; }
 
-        /* Inbox Styling */
-        .inquiry-card { border-bottom: 1px solid #eee; padding: 15px 0; }
-        .inquiry-card:last-child { border: none; }
+        .inquiry-item { border-bottom: 1px solid #eee; padding: 15px 0; }
         .hidden { display: none !important; }
-        
-        .status-badge { font-size: 0.8rem; background: #e7fce3; color: #1fa855; padding: 4px 8px; border-radius: 4px; }
     </style>
 </head>
 <body>
 
+    <div id="login-box" style="position:fixed; inset:0; background:var(--bg); z-index:100; display:flex; align-items:center; justify-content:center;">
+        <div class="card" style="width: 400px;">
+            <h2 style="margin-bottom:20px;">Author Authentication</h2>
+            <input type="email" id="admin-email" placeholder="Admin Email">
+            <input type="password" id="admin-password" placeholder="Password">
+            <button class="btn" onclick="handleLogin()">Login to Dashboard</button>
+        </div>
+    </div>
+
     <div class="sidebar">
-        <div class="sidebar-header">Portal Admin</div>
-        <div class="nav-item active" onclick="showTab('vlogs-tab', this)"><i class="fas fa-video"></i> Vlogs & Content</div>
-        <div class="nav-item" onclick="showTab('events-tab', this)"><i class="fas fa-calendar-alt"></i> Events</div>
-        <div class="nav-item" onclick="showTab('polls-tab', this)"><i class="fas fa-poll"></i> Polls</div>
-        <div class="nav-item" onclick="showTab('inbox-tab', this)"><i class="fas fa-inbox"></i> AI Inquiries</div>
-        <div class="nav-item" onclick="handleLogout()" style="margin-top: auto; color: #ff2e2e;"><i class="fas fa-sign-out-alt"></i> Logout</div>
+        <div class="sidebar-header">CHAIM ADMIN</div>
+        <div class="nav-item active" onclick="showTab('vlogs-tab', this)"><i class="fas fa-video"></i> Content</div>
+        <div class="nav-item" onclick="showTab('polls-tab', this)"><i class="fas fa-poll-h"></i> Polls</div>
+        <div class="nav-item" onclick="showTab('inbox-tab', this)"><i class="fas fa-inbox"></i> AI Inbox</div>
+        <div class="nav-item" onclick="handleLogout()" style="margin-top:auto; color:red;"><i class="fas fa-power-off"></i> Logout</div>
     </div>
 
     <div class="main">
-        <div id="login-box" class="card" style="max-width: 400px; margin: 100px auto;">
-            <h2>Secure Login</h2>
-            <input type="email" id="admin-email" placeholder="Email">
-            <input type="password" id="admin-password" placeholder="Password">
-            <button class="btn" onclick="handleLogin()">Enter Dashboard</button>
+        <h2 id="tab-title" style="margin-bottom:30px;">Content Management</h2>
+
+        <div id="vlogs-tab" class="tab-content">
+            <div class="card">
+                <h3>Post New Vlog or Blog</h3>
+                <select id="post-category">
+                    <option value="vlogs">Vlog</option>
+                    <option value="blogs">Blog</option>
+                </select>
+                <input type="text" id="post-title" placeholder="Title">
+                <textarea id="post-body" rows="4" placeholder="YouTube Link or Text Content"></textarea>
+                <button class="btn" onclick="saveContent()">Publish Now</button>
+            </div>
         </div>
 
-        <div id="dashboard-content" class="hidden">
-            <div class="header">
-                <h2 id="tab-title">Content Management</h2>
-                <div class="status-badge">System Online</div>
+        <div id="polls-tab" class="tab-content hidden">
+            <div class="card">
+                <h3>Launch Modern Poll</h3>
+                <input type="text" id="poll-question" placeholder="Poll Question">
+                <input type="text" id="poll-image" placeholder="Image or GIF URL (optional)">
+                <textarea id="poll-options" placeholder="Option 1, Option 2, Option 3 (separate with commas)"></textarea>
+                <button class="btn" onclick="savePoll()">Launch Poll</button>
             </div>
+        </div>
 
-            <div id="vlogs-tab" class="tab-content">
-                <div class="card">
-                    <h3>Create New Post</h3>
-                    <select id="post-category">
-                        <option value="vlogs">Vlogs</option>
-                        <option value="blogs">Blogs</option>
-                    </select>
-                    <input type="text" id="post-title" placeholder="Title">
-                    <textarea id="post-body" rows="4" placeholder="YouTube Link or Content"></textarea>
-                    <button class="btn" onclick="saveContent()">Publish Content</button>
-                </div>
-            </div>
-
-            <div id="events-tab" class="tab-content hidden">
-                <div class="card">
-                    <h3>Schedule Event</h3>
-                    <input type="text" id="event-title" placeholder="Event Name">
-                    <input type="date" id="event-date">
-                    <input type="text" id="event-location" placeholder="Location">
-                    <button class="btn" onclick="saveEvent()">Add Event</button>
-                </div>
-            </div>
-
-           <div id="polls-tab" class="tab-content hidden">
-    <div class="card">
-        <h3>Launch New Poll</h3>
-        
-        <input type="text" id="poll-question" placeholder="Question">
-        
-        <input type="text" id="poll-image" placeholder="Image or GIF URL (e.g. https://.../clapping.gif)">
-        
-        <textarea id="poll-options" placeholder="Option 1, Option 2 (comma separated)"></textarea>
-        
-        <button class="btn" onclick="savePoll()">Start Poll</button>
-    </div>
-</div>
-
-            <div id="inbox-tab" class="tab-content hidden">
-                <button class="btn btn-refresh" onclick="fetchInquiries()">
-                    <i class="fas fa-sync"></i> Refresh Messages
-                </button>
-                <div id="inbox-list" class="card">
-                    </div>
+        <div id="inbox-tab" class="tab-content hidden">
+            <button class="btn refresh-btn" onclick="fetchInquiries()"><i class="fas fa-sync"></i> Refresh Messages</button>
+            <div id="inbox-list" class="card">
+                <p style="text-align:center; color:gray;">No messages yet.</p>
             </div>
         </div>
     </div>
