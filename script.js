@@ -1,44 +1,57 @@
-// --- PASTE YOUR KEYS HERE ---
-const SUPABASE_URL = 'https://tijpwcarnjlrelcycyym.supabase.co';
+console.log("1. Script has started loading...");
+
+// --- YOUR CONNECTION ---
+const SUPABASE_URL = 'https://tijpwcarnjlrelcycyym.supabase.co'; 
 const SUPABASE_KEY = 'sb_publishable_f8zO8IQeA8WTsd9fj-3k-w_HCY7JBte';
-// ----------------------------
 
+// Attempt to connect to Supabase
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-let currentUser = "Guest";
+console.log("2. Supabase connected.");
 
-function enterSite() {
-    const user = document.getElementById('username-input').value;
-    if(!user) { alert("Please enter your name"); return; }
-    currentUser = user;
-    document.getElementById('login-screen').classList.add('hidden');
-    document.getElementById('app').classList.remove('hidden');
-    switchChat('ai'); 
+// --- THE TRANSITION ---
+// This function hides the splash and shows the login
+function showLogin() {
+    console.log("3. Timer finished! Attempting to hide splash...");
+    const splash = document.getElementById('splash');
+    const login = document.getElementById('login-screen');
+
+    if (splash && login) {
+        splash.style.display = 'none';      // Force hide splash
+        login.classList.remove('hidden');   // Show login
+        console.log("4. Success! Splash is hidden.");
+    } else {
+        console.log("Error: Could not find splash or login-screen in HTML.");
+    }
 }
 
-// Logic for switching chats and loading content
-const siteData = { /* ... previously provided site data ... */ };
+// Start the timer (Wait 3 seconds)
+setTimeout(showLogin, 3000);
 
+// --- LOGIN FUNCTION ---
+let currentUser = "Guest";
+function enterSite() {
+    const nameInput = document.getElementById('username-input');
+    if (nameInput && nameInput.value.trim() !== "") {
+        currentUser = nameInput.value;
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('app').classList.remove('hidden');
+        switchChat('ai'); 
+    } else {
+        alert("Please enter your name.");
+    }
+}
+
+// --- APP LOGIC ---
 async function switchChat(key) {
-    const chat = siteData[key];
+    console.log("Switching to chat: " + key);
     const msgArea = document.getElementById('message-area');
-    document.getElementById('active-chat-title').innerText = chat.title;
-    
-    msgArea.innerHTML = '<p style="text-align:center; color:gray;">Loading chat...</p>';
+    msgArea.innerHTML = 'Loading messages...';
 
-    // FETCH FROM SUPABASE: This gets your vlogs/blogs dynamically!
+    // Fetch from Supabase
     let { data: posts } = await _supabase.from('content').select('*').eq('category', key);
-    
-    msgArea.innerHTML = '';
-    // Show static welcome messages first
-    chat.messages.forEach(m => {
-        const div = document.createElement('div');
-        div.className = `msg ${m.type}`;
-        div.innerHTML = m.html || m.text;
-        msgArea.appendChild(div);
-    });
 
-    // Then show your new posts from the Back Office
-    if(posts) {
+    msgArea.innerHTML = '';
+    if (posts) {
         posts.forEach(post => {
             const div = document.createElement('div');
             div.className = "msg in";
@@ -47,31 +60,3 @@ async function switchChat(key) {
         });
     }
 }
-
-// AI Send Button: Saves to "inquiries" table
-document.getElementById('send-btn').addEventListener('click', async () => {
-    const input = document.getElementById('chat-input');
-    const msgArea = document.getElementById('message-area');
-    
-    if(input.value.trim() !== "") {
-        const userMessage = input.value;
-        const uMsg = document.createElement('div');
-        uMsg.className = "msg out";
-        uMsg.innerText = userMessage;
-        msgArea.appendChild(uMsg);
-
-        // SAVE INQUIRY TO DATABASE
-        await _supabase.from('inquiries').insert([{ sender: currentUser, message: userMessage }]);
-
-        setTimeout(() => {
-            const bMsg = document.createElement('div');
-            bMsg.className = "msg in";
-            bMsg.innerText = "Thanks " + currentUser + "! Chaim's team has received your message.";
-            msgArea.appendChild(bMsg);
-            msgArea.scrollTop = msgArea.scrollHeight;
-        }, 800);
-
-        input.value = "";
-        msgArea.scrollTop = msgArea.scrollHeight;
-    }
-});
