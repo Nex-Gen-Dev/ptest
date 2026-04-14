@@ -3,83 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chaim Perlowitz | Official Site</title>
+    <title>Chaim Perlowitz | Desktop Portal</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
 
-    <header>
-        <nav>
-            <div class="logo">CHAIM PERLOWITZ</div>
-            <ul>
-                <li><a href="#vlogs">Vlogs</a></li>
-                <li><a href="#blogs">Blogs</a></li>
-                <li><a href="#stores">Store Finder</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <section class="hero">
-        <h1>Professional & Entertaining</h1>
-        <p>Explore the latest content, insights, and updates.</p>
-    </header>
-
-    <div class="ad-container">
-        <p class="ad-label">Advertisement</p>
-        <div class="ad-placeholder">Your Ad Here</div>
+    <div id="splash">
+        <div class="splash-content">
+            <div class="splash-logo">CP</div>
+            <div class="loading-container"><div class="progress-bar"></div></div>
+            <p>CHAIM PERLOWITZ DESKTOP</p>
+            <small><i class="fas fa-lock"></i> End-to-end encrypted</small>
+        </div>
     </div>
 
-    <section id="vlogs" class="content-section">
-        <h2>Latest Vlogs</h2>
-        <div class="grid">
-            <div class="card">
-                <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
-                <h3>Vlog Title 1</h3>
+    <div id="login-screen" class="hidden">
+        <div class="login-header-bg"></div>
+        <div class="login-card">
+            <div class="login-text">
+                <h1>To use Chaim's Portal:</h1>
+                <ol>
+                    <li>Open this site on your computer.</li>
+                    <li>Enter your Name to unlock the dashboard.</li>
+                    <li>Click <strong>'ENTER PORTAL'</strong> to begin.</li>
+                </ol>
+                <div class="login-form">
+                    <input type="text" id="username-input" placeholder="Your Name">
+                    <button onclick="enterSite()" class="login-btn">ENTER PORTAL</button>
+                </div>
             </div>
-            </div>
-    </section>
-
-    <section id="blogs" class="content-section">
-        <h2>Featured Blogs</h2>
-        <div class="grid" id="blog-grid">
-            <div class="card">
-                <h3>The Future of Entertainment</h3>
-                <p>Read about the latest trends in the industry...</p>
-                <a href="#" class="btn">Read More</a>
+            <div class="login-qr">
+                <div class="qr-box">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=ChaimPerlowitz" alt="QR Code">
+                </div>
+                <p>Scan for secure access</p>
             </div>
         </div>
-    </section>
+    </div>
 
-    <section id="stores" class="content-section">
-        <h2>Store Finder</h2>
-        <input type="text" id="storeSearch" placeholder="Search by city or zip..." onkeyup="searchStores()">
-        <ul id="storeList">
-            <li class="store-item"><strong>New York Flagship</strong> - 123 Broadway, NY</li>
-            <li class="store-item"><strong>Jersey Hub</strong> - 456 Garden State Pkwy, NJ</li>
-            <li class="store-item"><strong>London Branch</strong> - 789 Piccadilly, UK</li>
-        </ul>
-    </section>
-
-    <section id="contact" class="content-section">
-        <h2>Get in Touch</h2>
-        <form action="https://formspree.io/f/YOUR_ID_HERE" method="POST">
-            <input type="text" name="name" placeholder="Your Name" required>
-            <input type="email" name="email" placeholder="Your Email" required>
-            <textarea name="message" placeholder="Your Message" required></textarea>
-            <button type="submit" class="btn">Send Message</button>
-        </form>
-    </section>
-
-    <a href="https://wa.me/1234567890" class="whatsapp-float" target="_blank">
-        <i class="fab fa-whatsapp"></i>
-    </a>
-
-    <footer>
-        <p>&copy; 2026 Chaim Perlowitz. All rights reserved.</p>
-    </footer>
+    <div id="app" class="hidden">
+        <div class="sidebar">
+            <header class="side-header">
+                <div class="profile-pic">CP</div>
+                <div class="header-icons">
+                    <i class="fas fa-circle-notch" onclick="switchChat('promotions')"></i>
+                    <i class="fas fa-comment-alt"></i>
+                    <i class="fas fa-ellipsis-v"></i>
+                </div>
+            </header>
+            <div class="search-bar"><div class="search-inner"><i class="fas fa-search"></i><input type="text" placeholder="Search or start new chat"></div></div>
+            <div class="chat-list">
+                <div class="chat-item active" onclick="switchChat('ai')"><div class="chat-avatar bot-color"><i class="fas fa-robot"></i></div><div class="chat-meta"><span>Business AI Bot</span><p>Online</p></div></div>
+                <div class="chat-item" onclick="switchChat('vlogs')"><div class="chat-avatar vlogs-color"><i class="fas fa-video"></i></div><div class="chat-meta"><span>Chaim's Vlogs</span><p>Video Feed</p></div></div>
+                <div class="chat-item" onclick="switchChat('blogs')"><div class="chat-avatar blogs-color"><i class="fas fa-newspaper"></i></div><div class="chat-meta"><span>The Blog Feed</span><p>Articles</p></div></div>
+            </div>
+        </div>
+        <div class="chat-window">
+            <header class="chat-header">
+                <div class="current-chat-info">
+                    <div id="current-avatar" class="chat-avatar-small bot-color"><i class="fas fa-robot"></i></div>
+                    <div class="current-text"><h3 id="active-chat-title">Business AI Bot</h3><small>online</small></div>
+                </div>
+            </header>
+            <div id="message-area" class="message-area"></div>
+            <footer class="chat-footer">
+                <i class="far fa-smile"></i><i class="fas fa-paperclip"></i>
+                <input type="text" id="chat-input" placeholder="Type a message">
+                <button id="send-btn"><i class="fas fa-paper-plane"></i></button>
+            </footer>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
