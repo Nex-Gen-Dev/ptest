@@ -84,3 +84,19 @@ body { font-family: 'Segoe UI', Helvetica, sans-serif; background-color: #dadbd3
 .stores-color { background: #9c27b0; }
 
 .hidden { display: none !important; }
+/* The Secret Door */
+#secret-admin-link {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 30px;      /* Small enough to miss, big enough to click */
+    height: 30px;
+    z-index: 9999;    /* Ensures it stays on top of the chat */
+    background: transparent; 
+    cursor: default;  /* Keeps the cursor looking normal until you know it's there */
+    text-decoration: none;
+}
+
+#secret-admin-link:hover {
+    cursor: pointer; /* Change to pointer so YOU know you found it */
+}
