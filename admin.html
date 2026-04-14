@@ -1,56 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Chaim's Back Office</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-</head>
-<body style="background: #f0f2f5; overflow-y: auto;">
-
-    <div style="max-width: 600px; margin: 50px auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-        <h2 style="color: #00a884; margin-bottom: 20px;">Add New Content</h2>
-        
-        <label>Category</label>
-        <select id="post-category" style="width: 100%; padding: 10px; margin: 10px 0;">
-            <option value="vlogs">Vlog</option>
-            <option value="blogs">Blog</option>
-            <option value="promotions">Promotion/Ad</option>
-        </select>
-
-        <label>Title</label>
-        <input type="text" id="post-title" placeholder="e.g. NYC Vlog" style="width: 100%; padding: 10px; margin: 10px 0;">
-
-        <label>Link or Text Content</label>
-        <textarea id="post-body" rows="5" placeholder="Paste YouTube link or Blog text here" style="width: 100%; padding: 10px; margin: 10px 0;"></textarea>
-
-        <button onclick="saveToSupabase()" class="login-btn" style="width: 100%;">POST TO WEBSITE</button>
-        <p id="status" style="margin-top: 10px; color: green;"></p>
+<div class="poll-container" style="margin-top: 30px; background: #fff;">
+    <h2 style="color: #008069;"><i class="fas fa-inbox"></i> AI Inquiry Inbox</h2>
+    <p>Messages received from website visitors:</p>
+    <hr><br>
+    
+    <div id="inbox-list" style="max-height: 400px; overflow-y: auto;">
+        <p style="color: gray; text-align: center;">Loading messages...</p>
     </div>
-
-    <script>
-        // REPLACE THESE with your actual Supabase details
-        const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-        const SUPABASE_KEY = 'YOUR_SUPABASE_KEY';
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-        async function saveToSupabase() {
-            const cat = document.getElementById('post-category').value;
-            const title = document.getElementById('post-title').value;
-            const body = document.getElementById('post-body').value;
-
-            const { data, error } = await supabase
-                .from('content')
-                .insert([{ category: cat, title: title, body: body }]);
-
-            if (error) {
-                alert("Error: " + error.message);
-            } else {
-                document.getElementById('status').innerText = "Successfully posted to the website!";
-                document.getElementById('post-title').value = "";
-                document.getElementById('post-body').value = "";
-            }
-        }
-    </script>
-</body>
-</html>
+    
+    <button onclick="fetchInquiries()" class="login-btn" style="width: 100%; margin-top: 15px; background: #54656f;">REFRESH INBOX</button>
+</div>
