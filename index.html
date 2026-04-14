@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chaim Perlowitz | Official Site</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <header>
+        <nav>
+            <div class="logo">CHAIM PERLOWITZ</div>
+            <ul>
+                <li><a href="#vlogs">Vlogs</a></li>
+                <li><a href="#blogs">Blogs</a></li>
+                <li><a href="#stores">Store Finder</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>Professional & Entertaining</h1>
+        <p>Explore the latest content, insights, and updates.</p>
+    </header>
+
+    <div class="ad-container">
+        <p class="ad-label">Advertisement</p>
+        <div class="ad-placeholder">Your Ad Here</div>
+    </div>
+
+    <section id="vlogs" class="content-section">
+        <h2>Latest Vlogs</h2>
+        <div class="grid">
+            <div class="card">
+                <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
+                <h3>Vlog Title 1</h3>
+            </div>
+            </div>
+    </section>
+
+    <section id="blogs" class="content-section">
+        <h2>Featured Blogs</h2>
+        <div class="grid" id="blog-grid">
+            <div class="card">
+                <h3>The Future of Entertainment</h3>
+                <p>Read about the latest trends in the industry...</p>
+                <a href="#" class="btn">Read More</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="stores" class="content-section">
+        <h2>Store Finder</h2>
+        <input type="text" id="storeSearch" placeholder="Search by city or zip..." onkeyup="searchStores()">
+        <ul id="storeList">
+            <li class="store-item"><strong>New York Flagship</strong> - 123 Broadway, NY</li>
+            <li class="store-item"><strong>Jersey Hub</strong> - 456 Garden State Pkwy, NJ</li>
+            <li class="store-item"><strong>London Branch</strong> - 789 Piccadilly, UK</li>
+        </ul>
+    </section>
+
+    <section id="contact" class="content-section">
+        <h2>Get in Touch</h2>
+        <form action="https://formspree.io/f/YOUR_ID_HERE" method="POST">
+            <input type="text" name="name" placeholder="Your Name" required>
+            <input type="email" name="email" placeholder="Your Email" required>
+            <textarea name="message" placeholder="Your Message" required></textarea>
+            <button type="submit" class="btn">Send Message</button>
+        </form>
+    </section>
+
+    <a href="https://wa.me/1234567890" class="whatsapp-float" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <footer>
+        <p>&copy; 2026 Chaim Perlowitz. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
