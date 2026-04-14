@@ -43,12 +43,26 @@ async function saveEvent() {
     if (error) alert(error.message); else alert("Event Scheduled!");
 }
 
-// --- SAVE POLL ---
 async function savePoll() {
     const question = document.getElementById('poll-question').value;
+    const imgUrl = document.getElementById('poll-image').value; // Add this input to your HTML
     const options = document.getElementById('poll-options').value;
-    const { error } = await _supabase.from('polls').insert([{ question, options }]);
-    if (error) alert(error.message); else alert("Poll Published!");
+
+    const { error } = await _supabase.from('polls').insert([{ 
+        question, 
+        image_url: imgUrl, 
+        options: options 
+    }]);
+
+    if (error) {
+        alert("Error: " + error.message);
+    } else {
+        alert("🚀 Poll launched with visuals!");
+        // Clear inputs
+        document.getElementById('poll-question').value = "";
+        document.getElementById('poll-image').value = "";
+        document.getElementById('poll-options').value = "";
+    }
 }
 
 // --- INBOX REFRESH LOGIC ---

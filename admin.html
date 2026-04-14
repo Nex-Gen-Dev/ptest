@@ -82,14 +82,19 @@
                 </div>
             </div>
 
-            <div id="polls-tab" class="tab-content hidden">
-                <div class="card">
-                    <h3>Launch New Poll</h3>
-                    <input type="text" id="poll-question" placeholder="Question">
-                    <textarea id="poll-options" placeholder="Option 1, Option 2 (comma separated)"></textarea>
-                    <button class="btn" onclick="savePoll()">Start Poll</button>
-                </div>
-            </div>
+           <div id="polls-tab" class="tab-content hidden">
+    <div class="card">
+        <h3>Launch New Poll</h3>
+        
+        <input type="text" id="poll-question" placeholder="Question">
+        
+        <input type="text" id="poll-image" placeholder="Image or GIF URL (e.g. https://.../clapping.gif)">
+        
+        <textarea id="poll-options" placeholder="Option 1, Option 2 (comma separated)"></textarea>
+        
+        <button class="btn" onclick="savePoll()">Start Poll</button>
+    </div>
+</div>
 
             <div id="inbox-tab" class="tab-content hidden">
                 <button class="btn btn-refresh" onclick="fetchInquiries()">

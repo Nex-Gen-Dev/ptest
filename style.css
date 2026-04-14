@@ -100,3 +100,53 @@ body { font-family: 'Segoe UI', Helvetica, sans-serif; background-color: #dadbd3
 #secret-admin-link:hover {
     cursor: pointer; /* Change to pointer so YOU know you found it */
 }
+/* Modern Poll Card */
+.poll-card-modern {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    margin: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    animation: slideUp 0.4s ease-out;
+}
+
+.poll-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-bottom: 3px solid #00a884;
+}
+
+.poll-content { padding: 20px; }
+
+.poll-content h4 {
+    font-size: 1.2rem;
+    color: #111b21;
+    margin-bottom: 15px;
+}
+
+.poll-options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.poll-vote-btn {
+    padding: 12px;
+    border: 2px solid #e9edef;
+    background: transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.poll-vote-btn:hover {
+    border-color: #00a884;
+    background: #f0fbf7;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
