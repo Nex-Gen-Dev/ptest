@@ -1,46 +1,48 @@
-const SUPABASE_URL = 'https://your-project-url.supabase.co';
-const SUPABASE_KEY = 'your-anon-key';
+// --- PASTE YOUR KEYS HERE ---
+const SUPABASE_URL = https://tijpwcarnjlrelcycyym.supabase.co;
+const SUPABASE_KEY = sb_publishable_f8zO8IQeA8WTsd9fj-3k-w_HCY7JBte;
+// ----------------------------
+
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// 1. Existing Function to Post Content
+// Function to Post Content
 async function saveToSupabase() {
-    // ... (Keep your existing saveToSupabase code here) ...
-}
+    const cat = document.getElementById('post-category').value;
+    const title = document.getElementById('post-title').value;
+    const body = document.getElementById('post-body').value;
+    const status = document.getElementById('status-msg');
 
-// 2. NEW: Function to Fetch AI Inquiries
-async function fetchInquiries() {
-    const inbox = document.getElementById('inbox-list');
-    
-    const { data: messages, error } = await _supabase
-        .from('inquiries')
-        .select('*')
-        .order('created_at', { ascending: false }); // Newest first
+    status.innerText = "Processing...";
+
+    const { error } = await _supabase.from('content').insert([{ 
+        category: cat, title: title, body: body 
+    }]);
 
     if (error) {
-        inbox.innerHTML = `<p style="color:red">Error: ${error.message}</p>`;
-        return;
+        status.innerText = "Error: " + error.message;
+        status.style.color = "red";
+    } else {
+        status.innerText = "✅ Posted Successfully!";
+        status.style.color = "green";
+        document.getElementById('post-title').value = "";
+        document.getElementById('post-body').value = "";
     }
-
-    if (messages.length === 0) {
-        inbox.innerHTML = `<p style="text-align:center">No messages yet.</p>`;
-        return;
-    }
-
-    inbox.innerHTML = ''; // Clear the "Loading" text
-    messages.forEach(msg => {
-        const time = new Date(msg.created_at).toLocaleString();
-        const msgDiv = document.createElement('div');
-        msgDiv.style = "background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #00a884;";
-        msgDiv.innerHTML = `
-            <div style="display:flex; justify-content:between; font-size:0.8rem; color:#888;">
-                <strong>From: ${msg.sender}</strong>
-                <span style="margin-left:auto">${time}</span>
-            </div>
-            <p style="margin-top:5px; color:#333;">${msg.message}</p>
-        `;
-        inbox.appendChild(msgDiv);
-    });
 }
 
-// Automatically load messages when you open the admin page
+// Function to Read AI Messages
+async function fetchInquiries() {
+    const inbox = document.getElementById('inbox-list');
+    const { data: messages } = await _supabase.from('inquiries').select('*').order('created_at', { ascending: false });
+
+    if (messages) {
+        inbox.innerHTML = '';
+        messages.forEach(msg => {
+            const div = document.createElement('div');
+            div.style = "background:#f9f9f9; padding:10px; margin-bottom:5px; border-left:3px solid #00a884;";
+            div.innerHTML = `<strong>${msg.sender}:</strong> ${msg.message}`;
+            inbox.appendChild(div);
+        });
+    }
+}
+
 window.onload = fetchInquiries;

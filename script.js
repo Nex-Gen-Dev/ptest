@@ -1,48 +1,72 @@
-// Initializing Supabase (Main Site)
-const SUPABASE_URL = 'https://your-project-url.supabase.co';
-const SUPABASE_KEY = 'your-anon-key';
-const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+// --- PASTE YOUR KEYS HERE ---
+const SUPABASE_URL = https://tijpwcarnjlrelcycyym.supabase.co;
+const SUPABASE_KEY = sb_publishable_f8zO8IQeA8WTsd9fj-3k-w_HCY7JBte;
+// ----------------------------
 
-let currentUser = "Guest"; // Global variable for the sender's name
+const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let currentUser = "Guest";
 
 function enterSite() {
     const user = document.getElementById('username-input').value;
     if(!user) { alert("Please enter your name"); return; }
-    currentUser = user; // Save the name for the database
-    
+    currentUser = user;
     document.getElementById('login-screen').classList.add('hidden');
     document.getElementById('app').classList.remove('hidden');
     switchChat('ai'); 
 }
 
-// ... (keep the siteData and switchChat functions from before) ...
+// Logic for switching chats and loading content
+const siteData = { /* ... previously provided site data ... */ };
 
-// Updated Send Message Logic to save to Supabase
+async function switchChat(key) {
+    const chat = siteData[key];
+    const msgArea = document.getElementById('message-area');
+    document.getElementById('active-chat-title').innerText = chat.title;
+    
+    msgArea.innerHTML = '<p style="text-align:center; color:gray;">Loading chat...</p>';
+
+    // FETCH FROM SUPABASE: This gets your vlogs/blogs dynamically!
+    let { data: posts } = await _supabase.from('content').select('*').eq('category', key);
+    
+    msgArea.innerHTML = '';
+    // Show static welcome messages first
+    chat.messages.forEach(m => {
+        const div = document.createElement('div');
+        div.className = `msg ${m.type}`;
+        div.innerHTML = m.html || m.text;
+        msgArea.appendChild(div);
+    });
+
+    // Then show your new posts from the Back Office
+    if(posts) {
+        posts.forEach(post => {
+            const div = document.createElement('div');
+            div.className = "msg in";
+            div.innerHTML = `<strong>${post.title}</strong><br>${post.body}`;
+            msgArea.appendChild(div);
+        });
+    }
+}
+
+// AI Send Button: Saves to "inquiries" table
 document.getElementById('send-btn').addEventListener('click', async () => {
     const input = document.getElementById('chat-input');
     const msgArea = document.getElementById('message-area');
     
     if(input.value.trim() !== "") {
         const userMessage = input.value;
-
-        // 1. Add User Message to UI
         const uMsg = document.createElement('div');
         uMsg.className = "msg out";
         uMsg.innerText = userMessage;
         msgArea.appendChild(uMsg);
 
-        // 2. SAVE TO SUPABASE (This is the new part!)
-        const { error } = await _supabase
-            .from('inquiries')
-            .insert([{ sender: currentUser, message: userMessage }]);
+        // SAVE INQUIRY TO DATABASE
+        await _supabase.from('inquiries').insert([{ sender: currentUser, message: userMessage }]);
 
-        if (error) console.log("Database Error:", error.message);
-
-        // 3. Bot Response
         setTimeout(() => {
             const bMsg = document.createElement('div');
             bMsg.className = "msg in";
-            bMsg.innerText = "Chaim's team has received your message. We will reach out shortly!";
+            bMsg.innerText = "Thanks " + currentUser + "! Chaim's team has received your message.";
             msgArea.appendChild(bMsg);
             msgArea.scrollTop = msgArea.scrollHeight;
         }, 800);
