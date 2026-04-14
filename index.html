@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chaim Perlowitz | Desktop Portal</title>
+    <title>Chaim Perlowitz | WhatsApp Desktop</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -11,7 +11,7 @@
 
     <div id="splash">
         <div class="splash-content">
-            <div class="splash-logo"><img src="your-logo.png" style="width:100%"></div>
+            <div class="splash-logo">CP</div>
             <div class="loading-container">
                 <div class="progress-bar"></div>
             </div>
@@ -24,11 +24,11 @@
         <div class="login-header-bg"></div>
         <div class="login-card">
             <div class="login-text">
-                <h1>To use Chaim's Portal on your computer:</h1>
+                <h1>To use Chaim's Portal:</h1>
                 <ol>
-                    <li>Open this site to access exclusive content.</li>
-                    <li>Enter your <strong>Access Key</strong> or Name below.</li>
-                    <li>Click <strong>'ENTER PORTAL'</strong> to start chatting.</li>
+                    <li>Open this site on your computer.</li>
+                    <li>Enter your Name to unlock the dashboard.</li>
+                    <li>Click <strong>'ENTER PORTAL'</strong> to begin.</li>
                 </ol>
                 <div class="login-form">
                     <input type="text" id="username-input" placeholder="Your Name">
@@ -39,7 +39,7 @@
                 <div class="qr-box">
                     <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=ChaimPerlowitz" alt="QR Code">
                 </div>
-                <p>Scan for mobile access</p>
+                <p>Scan for secure access</p>
             </div>
         </div>
     </div>
@@ -49,7 +49,7 @@
             <header class="side-header">
                 <div class="profile-pic">CP</div>
                 <div class="header-icons">
-                    <i class="fas fa-circle-notch"></i>
+                    <i class="fas fa-circle-notch" onclick="switchChat('promotions')" title="Status/Promotions"></i>
                     <i class="fas fa-comment-alt"></i>
                     <i class="fas fa-ellipsis-v"></i>
                 </div>
@@ -63,39 +63,51 @@
             </div>
 
             <div class="chat-list">
+                <div class="chat-item" onclick="switchChat('promotions')">
+                    <div class="chat-avatar promo-color"><i class="fas fa-bullhorn"></i></div>
+                    <div class="chat-meta">
+                        <div class="chat-top"><span>Promotions & Ads</span> <small>Now</small></div>
+                        <p>Special offers and brand deals...</p>
+                    </div>
+                </div>
+
                 <div class="chat-item active" onclick="switchChat('ai')">
                     <div class="chat-avatar bot-color"><i class="fas fa-robot"></i></div>
                     <div class="chat-meta">
-                        <div class="chat-top"><span>Business AI Bot</span> <small>12:45 PM</small></div>
-                        <p>Ask me about ads & business...</p>
+                        <div class="chat-top"><span>Business AI Bot</span> <small>Online</small></div>
+                        <p>How can I help with your inquiry?</p>
                     </div>
                 </div>
+
                 <div class="chat-item" onclick="switchChat('vlogs')">
                     <div class="chat-avatar vlogs-color"><i class="fas fa-video"></i></div>
                     <div class="chat-meta">
                         <div class="chat-top"><span>Chaim's Vlogs</span> <small>Yesterday</small></div>
-                        <p>Video: NYC Behind the Scenes</p>
+                        <p>Video: Behind the Scenes</p>
                     </div>
                 </div>
+
                 <div class="chat-item" onclick="switchChat('blogs')">
                     <div class="chat-avatar blogs-color"><i class="fas fa-newspaper"></i></div>
                     <div class="chat-meta">
                         <div class="chat-top"><span>The Blog Feed</span> <small>Tuesday</small></div>
-                        <p>New Post: The Future of Media</p>
+                        <p>Reading: The Art of Entertainment</p>
                     </div>
                 </div>
+
                 <div class="chat-item" onclick="switchChat('polls')">
                     <div class="chat-avatar polls-color"><i class="fas fa-poll-h"></i></div>
                     <div class="chat-meta">
                         <div class="chat-top"><span>Live Polls</span> <small>10:00 AM</small></div>
-                        <p>Vote on the next topic!</p>
+                        <p>New poll: Vote on the next vlog!</p>
                     </div>
                 </div>
+
                 <div class="chat-item" onclick="switchChat('stores')">
                     <div class="chat-avatar stores-color"><i class="fas fa-map-marker-alt"></i></div>
                     <div class="chat-meta">
-                        <div class="chat-top"><span>Store Finder</span> <small>Online</small></div>
-                        <p>Find a location near you</p>
+                        <div class="chat-top"><span>Store Finder</span> <small>Location</small></div>
+                        <p>Find Chaim's local partners...</p>
                     </div>
                 </div>
             </div>
