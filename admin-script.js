@@ -1,10 +1,34 @@
-// --- AUTO-CONFIGURED SUPABASE CONNECTION ---
 const SUPABASE_URL = 'https://tijpwcarnjlrelcycyym.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_f8zO8IQeA8WTsd9fj-3k-w_HCY7JBte';
-
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// 1. Post Content Function
+// 1. LOGIN LOGIC
+async function handleLogin() {
+    const email = document.getElementById('admin-email').value;
+    const password = document.getElementById('admin-password').value;
+    const status = document.getElementById('login-status');
+
+    const { data, error } = await _supabase.auth.signInWithPassword({
+        email: email,
+        password: password,
+    });
+
+    if (error) {
+        status.innerText = "Login Failed: " + error.message;
+        status.style.color = "red";
+    } else {
+        document.getElementById('admin-login').classList.add('hidden');
+        document.getElementById('admin-panel').classList.remove('hidden');
+    }
+}
+
+// 2. LOGOUT LOGIC
+async function handleLogout() {
+    await _supabase.auth.signOut();
+    location.reload(); // Refresh the page to lock it again
+}
+
+// 3. POST CONTENT LOGIC
 async function saveToSupabase() {
     const cat = document.getElementById('post-category').value;
     const title = document.getElementById('post-title').value;
@@ -12,8 +36,8 @@ async function saveToSupabase() {
     const status = document.getElementById('status-msg');
 
     status.innerText = "Publishing...";
-    status.style.color = "blue";
 
+    // Because you are logged in, this INSERT will now be allowed by RLS
     const { error } = await _supabase.from('content').insert([{ 
         category: cat, title: title, body: body 
     }]);
@@ -28,26 +52,3 @@ async function saveToSupabase() {
         document.getElementById('post-body').value = "";
     }
 }
-
-// 2. Fetch AI Inquiries Function
-async function fetchInquiries() {
-    const inbox = document.getElementById('inbox-list');
-    const { data: messages, error } = await _supabase
-        .from('inquiries')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-    if (messages) {
-        inbox.innerHTML = '';
-        messages.forEach(msg => {
-            const div = document.createElement('div');
-            div.style = "background:#f9f9f9; padding:15px; border-radius:8px; margin-bottom:10px; border-left:4px solid #00a884; font-size: 0.9rem;";
-            div.innerHTML = `<strong>${msg.sender}:</strong> ${msg.message}`;
-            inbox.appendChild(div);
-        });
-    } else if (error) {
-        inbox.innerHTML = '<p style="color:red;">Error loading inbox.</p>';
-    }
-}
-
-window.onload = fetchInquiries;
