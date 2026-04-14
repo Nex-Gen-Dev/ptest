@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chaim Perlowitz | Official Portal</title>
-    
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -16,30 +14,32 @@
     <div id="splash">
         <div class="splash-logo">CP</div>
         <div class="loader"></div>
-        <p>SECURE ACCESS ENCRYPTED</p>
+        <p>SECURE CONNECTION ESTABLISHED</p>
     </div>
 
     <div id="login-screen" class="hidden">
         <div class="login-card">
-            <h1>Welcome to the Portal</h1>
-            <p>Please enter your name to unlock the desktop.</p>
-            <input type="text" id="username-input" placeholder="Your Name">
-            <button onclick="enterSite()" class="login-btn">UNLOCK DASHBOARD</button>
+            <h1>Chaim's Desktop</h1>
+            <p>Identity verification required to enter the dashboard.</p>
+            <div class="login-row">
+                <input type="text" id="username-input" placeholder="Enter Your Name">
+                <button onclick="enterSite()" class="login-btn">UNLOCK</button>
+            </div>
         </div>
     </div>
 
     <div id="app" class="dashboard-container hidden">
-        
         <nav class="sidebar">
             <div class="sidebar-user">
                 <div class="avatar">CP</div>
                 <h3>Chaim's Portal</h3>
             </div>
             <ul class="nav-links">
-                <li class="active" onclick="switchTab('ai', this)"><i class="fas fa-robot"></i> <span>Business AI</span></li>
-                <li onclick="switchTab('vlogs', this)"><i class="fas fa-play-circle"></i> <span>Latest Vlogs</span></li>
-                <li onclick="switchTab('blogs', this)"><i class="fas fa-feather-alt"></i> <span>Blog Feed</span></li>
-                <li onclick="switchTab('polls', this)"><i class="fas fa-chart-bar"></i> <span>Live Polls</span></li>
+                <li id="li-ai" class="active" onclick="switchTab('ai', this)"><i class="fas fa-robot"></i> <span>Business AI</span></li>
+                <li id="li-vlogs" onclick="switchTab('vlogs', this)"><i class="fas fa-play-circle"></i> <span>Latest Vlogs</span></li>
+                <li id="li-events" onclick="switchTab('events', this)"><i class="fas fa-calendar-alt"></i> <span>Events</span></li>
+                <li id="li-blogs" onclick="switchTab('blogs', this)"><i class="fas fa-feather-alt"></i> <span>Blog Feed</span></li>
+                <li id="li-polls" onclick="switchTab('polls', this)"><i class="fas fa-chart-pie"></i> <span>Live Polls</span></li>
             </ul>
         </nav>
 
@@ -49,10 +49,11 @@
                 <button class="refresh-circle" onclick="refreshContent()"><i class="fas fa-sync-alt"></i></button>
             </header>
 
-            <div id="display-area" class="display-area"></div>
+            <div id="display-area" class="display-area">
+                </div>
 
             <div id="chat-footer" class="chat-footer">
-                <input type="text" id="chat-input" placeholder="Ask Chaim's team a question...">
+                <input type="text" id="chat-input" placeholder="Type a message to Chaim's team...">
                 <button id="send-btn"><i class="fas fa-paper-plane"></i></button>
             </div>
         </main>
