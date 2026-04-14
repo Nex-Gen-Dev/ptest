@@ -1,49 +1,161 @@
-<li><a href="#polls">Create Poll</a></li>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chaim Perlowitz | Official Site</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
 
-<section id="polls" class="content-section">
-    <h2>Poll Management</h2>
-    <div class="poll-container">
-        <div class="poll-form">
-            <label>Poll Title</label>
-            <input type="text" id="pollTitle" placeholder="Poll test">
+    <header>
+        <nav>
+            <div class="logo">CHAIM PERLOWITZ</div>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#vlogs">Vlogs</a></li>
+                <li><a href="#blogs">Blogs</a></li>
+                <li><a href="#polls">Polls</a></li>
+                <li><a href="#stores">Stores</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
 
-            <label>Poll Image (Optional)</label>
-            <input type="text" id="pollImageUrl" placeholder="Image URL">
-            <button class="btn-secondary"><i class="fas fa-upload"></i> Upload Image</button>
+    <section id="home" class="hero">
+        <h1>Chaim Perlowitz</h1>
+        <p>Professional Entertainment & Digital Content</p>
+        <a href="#vlogs" class="btn">Watch Latest Vlogs</a>
+    </section>
 
-            <label>Poll Type</label>
-            <select id="pollType">
-                <option value="multiple">Multiple Choice</option>
-                <option value="rating">Rating</option>
-            </select>
-
-            <div class="options-header">
-                <label>Options</label>
-                <button type="button" class="btn-text" onclick="addOption()"><i class="fas fa-plus"></i> Add Option</button>
-            </div>
-            <div id="optionsList">
-                <input type="text" class="poll-option" placeholder="One">
-                <input type="text" class="poll-option" placeholder="Two">
-            </div>
-
-            <div class="toggle-container">
-                <label class="switch">
-                    <input type="checkbox" id="multipleSelections">
-                    <span class="slider round"></span>
-                </label>
-                <span>Allow multiple selections</span>
-            </div>
-
-            <label>Expiration Date (Optional)</label>
-            <input type="date" id="expiryDate">
-
-            <label>Status</label>
-            <select id="pollStatus">
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-            </select>
-            
-            <button class="btn" style="width: 100%; margin-top: 20px;">Create Poll</button>
-        </div>
+    <div class="ad-container">
+        <p class="ad-label">ADVERTISEMENT</p>
+        <div class="ad-placeholder">Feature Your Brand Here</div>
     </div>
-</section>
+
+    <section id="vlogs" class="content-section">
+        <h2>Latest Vlogs</h2>
+        <div class="grid">
+            <div class="card">
+                <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
+                <div class="card-content">
+                    <h3>Behind the Scenes: Episode 1</h3>
+                    <p>A deep dive into the creative process.</p>
+                </div>
+            </div>
+            <div class="card">
+                <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
+                <div class="card-content">
+                    <h3>On Location: NYC</h3>
+                    <p>Exploring the energy of the city.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="blogs" class="content-section">
+        <h2>Featured Blogs</h2>
+        <div class="grid">
+            <div class="card">
+                <div class="card-content">
+                    <h3>The Art of Storytelling</h3>
+                    <p>Why narrative matters in modern media...</p>
+                    <a href="#" class="btn-small">Read More</a>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-content">
+                    <h3>Digital Trends 2026</h3>
+                    <p>What to expect in the coming year...</p>
+                    <a href="#" class="btn-small">Read More</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="polls" class="content-section poll-bg">
+        <h2>Create a Poll</h2>
+        <div class="poll-container">
+            <div class="poll-form">
+                <label>Poll Title</label>
+                <input type="text" id="pollTitle" placeholder="Poll test">
+
+                <label>Poll Image (Optional)</label>
+                <div class="upload-box">
+                    <input type="text" id="pollImageUrl" placeholder="Image URL">
+                    <button class="btn-secondary"><i class="fas fa-upload"></i> Upload</button>
+                </div>
+
+                <label>Poll Type</label>
+                <select id="pollType">
+                    <option value="multiple">Multiple Choice</option>
+                    <option value="rating">Rating</option>
+                </select>
+
+                <div class="options-header">
+                    <label>Options</label>
+                    <button type="button" class="btn-text" onclick="addOption()"><i class="fas fa-plus"></i> Add Option</button>
+                </div>
+                <div id="optionsList">
+                    <input type="text" class="poll-option" placeholder="One">
+                    <input type="text" class="poll-option" placeholder="Two">
+                </div>
+
+                <div class="toggle-container">
+                    <label class="switch">
+                        <input type="checkbox" id="multipleSelections">
+                        <span class="slider round"></span>
+                    </label>
+                    <span>Allow multiple selections</span>
+                </div>
+
+                <label>Expiration Date (Optional)</label>
+                <input type="date" id="expiryDate">
+
+                <label>Status</label>
+                <select id="pollStatus">
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                </select>
+                
+                <button class="btn" style="width: 100%; margin-top: 20px;">Create Poll</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="stores" class="content-section">
+        <h2>Store Finder</h2>
+        <div class="search-box">
+            <input type="text" id="storeSearch" placeholder="Search by city or zip..." onkeyup="searchStores()">
+        </div>
+        <ul id="storeList">
+            <li class="store-item"><strong>New York Flagship</strong> - 123 Broadway, NY <a href="#">(Map)</a></li>
+            <li class="store-item"><strong>Jersey Hub</strong> - 456 Garden State Pkwy, NJ <a href="#">(Map)</a></li>
+            <li class="store-item"><strong>London Branch</strong> - 789 Piccadilly, UK <a href="#">(Map)</a></li>
+        </ul>
+    </section>
+
+    <section id="contact" class="content-section">
+        <h2>Get in Touch</h2>
+        <div class="contact-container">
+            <form action="https://formspree.io/f/YOUR_ID_HERE" method="POST">
+                <input type="text" name="name" placeholder="Your Name" required>
+                <input type="email" name="email" placeholder="Your Email" required>
+                <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+                <button type="submit" class="btn">Send Message</button>
+            </form>
+        </div>
+    </section>
+
+    <a href="https://wa.me/1234567890" class="whatsapp-float" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <footer>
+        <p>&copy; 2026 Chaim Perlowitz. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
