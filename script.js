@@ -1,6 +1,6 @@
 // --- PASTE YOUR KEYS HERE ---
-const SUPABASE_URL = https://tijpwcarnjlrelcycyym.supabase.co;
-const SUPABASE_KEY = sb_publishable_f8zO8IQeA8WTsd9fj-3k-w_HCY7JBte;
+const SUPABASE_URL = 'https://tijpwcarnjlrelcycyym.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_f8zO8IQeA8WTsd9fj-3k-w_HCY7JBte';
 // ----------------------------
 
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
