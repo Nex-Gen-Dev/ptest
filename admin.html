@@ -2,104 +2,47 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chaim's Portal | Back Office</title>
-
+    <title>Chaim's Portal | Secure Back Office</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
     <link rel="stylesheet" href="style.css">
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
     <style>
-        /* Specific tweaks for the Admin view */
-        body {
-            background-color: #dadbd3; /* Matching the WhatsApp background */
-            padding: 40px 20px;
-            overflow-y: auto; /* Ensure you can scroll through messages */
-        }
-        .admin-card {
-            max-width: 700px;
-            margin: 0 auto 30px auto;
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        }
-        .admin-card h2 {
-            color: #008069;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        textarea {
-            width: 100%;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            padding: 12px;
-            font-family: inherit;
-            margin-bottom: 15px;
-            resize: vertical;
-        }
-        .inquiry-item {
-            background: #f8f9fa;
-            border-left: 5px solid #00a884;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 4px;
-        }
-        .inquiry-header {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.8rem;
-            color: #667781;
-            margin-bottom: 8px;
-        }
+        body { background-color: #dadbd3; padding: 40px 20px; font-family: sans-serif; }
+        .admin-card { max-width: 600px; margin: 0 auto 30px auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+        /* This hides sections until we need them */
+        .hidden { display: none !important; }
+        input, select, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px; }
     </style>
 </head>
 <body>
 
-    <div class="admin-card">
-        <h2><i class="fas fa-edit"></i> Create New Post</h2>
-        <p style="color: #667781; margin-bottom: 20px;">Add content to the Vlogs, Blogs, or Promotions tabs.</p>
-        
-        <div class="poll-form">
-            <label><b>Target Category</b></label>
-            <select id="post-category" style="width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px;">
-                <option value="vlogs">Chaim's Vlogs (Video Links)</option>
-                <option value="blogs">The Blog Feed (Articles)</option>
-                <option value="promotions">Promotions & Ads (Special Offers)</option>
-                <option value="polls">Live Polls (Announcements)</option>
-                <option value="stores">Store Finder (New Locations)</option>
-            </select>
-
-            <label><b>Post Title</b></label>
-            <input type="text" id="post-title" placeholder="e.g., New Vlog from the Studio" style="width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px;">
-
-            <label><b>Message/Link Content</b></label>
-            <textarea id="post-body" rows="5" placeholder="For Vlogs: Paste the full YouTube URL. For Blogs: Type your article here."></textarea>
-
-            <button onclick="saveToSupabase()" class="login-btn" style="width: 100%; font-size: 1.1rem;">
-                <i class="fas fa-paper-plane"></i> PUBLISH TO WEBSITE
-            </button>
-            
-            <p id="status-msg" style="margin-top: 15px; text-align: center; font-weight: bold;"></p>
-        </div>
+    <div id="admin-login" class="admin-card">
+        <h2 style="color: #008069;"><i class="fas fa-lock"></i> Author Login</h2>
+        <p>Enter the email and password you created in Supabase.</p>
+        <input type="email" id="admin-email" placeholder="Your Email Address">
+        <input type="password" id="admin-password" placeholder="Your Password">
+        <button onclick="handleLogin()" class="login-btn" style="width: 100%;">LOGIN TO POST</button>
+        <p id="login-status" style="margin-top:10px; text-align:center; font-weight: bold;"></p>
     </div>
 
-    <div class="admin-card">
-        <h2><i class="fas fa-inbox"></i> AI Inquiry Inbox</h2>
-        <p style="color: #667781; margin-bottom: 20px;">Messages sent by users via the Business AI Bot.</p>
-        <hr style="border: 0; border-top: 1px solid #eee; margin-bottom: 20px;">
-        
-        <div id="inbox-list">
-            <p style="text-align: center; color: #888; padding: 20px;">Checking for new messages...</p>
+    <div id="admin-panel" class="admin-card hidden">
+        <h2 style="color: #008069;"><i class="fas fa-edit"></i> Create New Post</h2>
+        <div class="poll-form">
+            <label>Category</label>
+            <select id="post-category">
+                <option value="vlogs">Vlogs</option>
+                <option value="blogs">Blogs</option>
+                <option value="promotions">Promotions</option>
+            </select>
+            <input type="text" id="post-title" placeholder="Title">
+            <textarea id="post-body" rows="5" placeholder="YouTube Link or Text"></textarea>
+            <button onclick="saveToSupabase()" class="login-btn" style="width: 100%;">PUBLISH TO WEBSITE</button>
+            <p id="status-msg" style="margin-top: 15px; text-align: center; font-weight: bold;"></p>
         </div>
-        
-        <button onclick="fetchInquiries()" class="login-btn" style="width: 100%; margin-top: 20px; background-color: #54656f;">
-            <i class="fas fa-sync-alt"></i> REFRESH INBOX
-        </button>
+        <hr style="margin: 20px 0;">
+        <button onclick="handleLogout()" style="background:none; border:none; color:red; cursor:pointer;">Logout</button>
     </div>
 
     <script src="admin-script.js"></script>
+</body>
+</html>
