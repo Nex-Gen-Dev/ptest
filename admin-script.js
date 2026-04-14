@@ -1,98 +1,80 @@
-// --- CONFIGURATION (Hardcoded for Chaim) ---
 const SUPABASE_URL = 'https://tijpwcarnjlrelcycyym.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_f8zO8IQeA8WTsd9fj-3k-w_HCY7JBte';
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// --- 1. LOGIN LOGIC ---
+// --- TAB SYSTEM ---
+function showTab(tabId, el) {
+    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+    document.getElementById(tabId).classList.remove('hidden');
+    document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('tab-title').innerText = el.innerText;
+}
+
+// --- AUTH ---
 async function handleLogin() {
     const email = document.getElementById('admin-email').value;
     const password = document.getElementById('admin-password').value;
-    const status = document.getElementById('login-status');
-
-    status.innerText = "Authenticating...";
-    status.style.color = "#54656f";
-
     const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
 
-    if (error) {
-        status.innerText = "Login Failed: " + error.message;
-        status.style.color = "red";
-    } else {
-        // Hide login, show panel
-        document.getElementById('admin-login').classList.add('hidden');
-        document.getElementById('admin-panel').classList.remove('hidden');
-        
-        // CRITICAL: Load inquiries immediately after login
-        fetchInquiries();
+    if (error) { alert("Login failed: " + error.message); }
+    else {
+        document.getElementById('login-box').classList.add('hidden');
+        document.getElementById('dashboard-content').classList.remove('hidden');
+        fetchInquiries(); 
     }
 }
 
-// --- 2. FETCH AI INQUIRIES (The Inbox) ---
+// --- SAVE CONTENT (Vlogs/Blogs) ---
+async function saveContent() {
+    const cat = document.getElementById('post-category').value;
+    const title = document.getElementById('post-title').value;
+    const body = document.getElementById('post-body').value;
+    const { error } = await _supabase.from('content').insert([{ category: cat, title, body }]);
+    if (error) alert(error.message); else alert("Content Live!");
+}
+
+// --- SAVE EVENT ---
+async function saveEvent() {
+    const title = document.getElementById('event-title').value;
+    const date = document.getElementById('event-date').value;
+    const loc = document.getElementById('event-location').value;
+    const { error } = await _supabase.from('events').insert([{ title, date, location: loc }]);
+    if (error) alert(error.message); else alert("Event Scheduled!");
+}
+
+// --- SAVE POLL ---
+async function savePoll() {
+    const question = document.getElementById('poll-question').value;
+    const options = document.getElementById('poll-options').value;
+    const { error } = await _supabase.from('polls').insert([{ question, options }]);
+    if (error) alert(error.message); else alert("Poll Published!");
+}
+
+// --- INBOX REFRESH LOGIC ---
 async function fetchInquiries() {
     const inbox = document.getElementById('inbox-list');
-    inbox.innerHTML = '<p style="text-align:center; color:blue;">Fetching messages from database...</p>';
+    inbox.innerHTML = '<p>Refreshing inbox...</p>';
 
-    // Fetching from your "inquiries" table
     const { data: messages, error } = await _supabase
         .from('inquiries')
         .select('*')
         .order('created_at', { ascending: false });
 
-    if (error) {
-        console.error("Fetch Error:", error);
-        inbox.innerHTML = `<p style="color:red; padding:10px;"><b>Error:</b> ${error.message}<br><small>Make sure your RLS Policy allows "SELECT" for Authenticated users.</small></p>`;
-        return;
-    }
+    if (error) { inbox.innerHTML = "Error loading inquiries."; return; }
 
-    if (!messages || messages.length === 0) {
-        inbox.innerHTML = '<p style="text-align:center; color:#888; padding:20px;">No messages found in the "inquiries" table yet.</p>';
-        return;
-    }
-
-    // Clear and build the list
     inbox.innerHTML = '';
     messages.forEach(msg => {
         const date = new Date(msg.created_at).toLocaleString();
-        const item = document.createElement('div');
-        item.style = "background:#f9f9f9; padding:15px; border-radius:8px; margin-bottom:12px; border-left:5px solid #00a884; box-shadow: 0 2px 5px rgba(0,0,0,0.05);";
-        item.innerHTML = `
-            <div style="display:flex; justify-content:space-between; font-size:0.8rem; color:#667781; margin-bottom:8px;">
-                <strong>Sender: ${msg.sender || 'Anonymous'}</strong>
-                <span>${date}</span>
-            </div>
-            <p style="margin:0; color:#111b21; line-height:1.4;">${msg.message}</p>
+        const div = document.createElement('div');
+        div.className = "inquiry-card";
+        div.innerHTML = `
+            <div style="color: #667781; font-size: 0.85rem;">${date}</div>
+            <div style="font-weight: bold; color: var(--primary); margin: 5px 0;">From: ${msg.sender}</div>
+            <div style="color: #111b21;">${msg.message}</div>
         `;
-        inbox.appendChild(item);
+        inbox.appendChild(div);
     });
 }
 
-// --- 3. PUBLISH CONTENT ---
-async function saveToSupabase() {
-    const cat = document.getElementById('post-category').value;
-    const title = document.getElementById('post-title').value;
-    const body = document.getElementById('post-body').value;
-    const status = document.getElementById('status-msg');
-
-    status.innerText = "Publishing...";
-    status.style.color = "blue";
-
-    const { error } = await _supabase.from('content').insert([{ 
-        category: cat, title: title, body: body 
-    }]);
-
-    if (error) {
-        status.innerText = "Error: " + error.message;
-        status.style.color = "red";
-    } else {
-        status.innerText = "✅ Successfully Posted!";
-        status.style.color = "green";
-        document.getElementById('post-title').value = "";
-        document.getElementById('post-body').value = "";
-    }
-}
-
-// --- 4. LOGOUT ---
-async function handleLogout() {
-    await _supabase.auth.signOut();
-    location.reload();
-}
+function handleLogout() { _supabase.auth.signOut(); location.reload(); }
